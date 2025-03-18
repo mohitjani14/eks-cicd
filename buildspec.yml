@@ -8,7 +8,7 @@ phases:
       # Docker Image Tag with Date Time & CodeBuild Resolved Source Version
       - echo "Generating Docker image tag..."
       - TAG="$(date +'%Y-%m-%d.%H.%M.%S').$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
-      - echo "Generated TAG: $TAG"
+      - echo "Generated TAG:$TAG"
       # Update Image tag in our Kubernetes Deployment Manifest        
       - echo "Update Image tag in kube-manifest..."
       - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$TAG"'@' kube-manifests/01-DEVOPS-Nginx-Deployment.yml
