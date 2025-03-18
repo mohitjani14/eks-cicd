@@ -9,24 +9,24 @@ phases:
       - echo "Generating Docker image tag..."
       - TAG="$(date +'%Y-%m-%d.%H.%M.%S').$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
       - echo "Generated TAG: $TAG"
-        # Update Image tag in our Kubernetes Deployment Manifest        
-        - echo "Update Image tag in kube-manifest..."
-        - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$TAG"'@' kube-manifests/01-DEVOPS-Nginx-Deployment.yml
-        # Verify AWS CLI Version        
-        - echo "Verify AWS CLI Version..."
-        - aws --version
-        # Login to ECR Registry for docker to push the image to ECR Repository
-        - echo "Login in to Amazon ECR..."
-        - $(aws ecr get-login --no-include-email)
-        # Update Kube config Home Directory
-        - export KUBECONFIG=$HOME/.kube/config
+      # Update Image tag in our Kubernetes Deployment Manifest        
+      - echo "Update Image tag in kube-manifest..."
+      - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$TAG"'@' kube-manifests/01-DEVOPS-Nginx-Deployment.yml
+      # Verify AWS CLI Version        
+      - echo "Verify AWS CLI Version..."
+      - aws --version
+      # Login to ECR Registry for docker to push the image to ECR Repository
+      - echo "Login in to Amazon ECR..."
+      - $(aws ecr get-login --no-include-email)
+      # Update Kube config Home Directory
+      - export KUBECONFIG=$HOME/.kube/config
   build:
     commands:
       # Build Docker Image
       - echo "Build started on `date`"
       - echo "Building the Docker image..."
       - docker build --tag $REPOSITORY_URI:$TAG .
-        post_build:
+  post_build:
     commands:
       # Push Docker Image to ECR Repository
       - echo "Build completed on `date`"
